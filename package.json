@@ -1,0 +1,17 @@
+{
+  "name": "book-tracker",
+  "version": "1.0.0",
+  "description": "My personal book tracking system",
+  "license": "ISC",
+  "author": "DmitriDiMedici",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "pg": "^8.19.0"
+  }
+}
