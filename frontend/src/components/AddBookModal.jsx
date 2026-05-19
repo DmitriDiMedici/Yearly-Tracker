@@ -1,7 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 function AddBookModal({ isOpen, onClose }) {
   const modalRef = useRef(null);
+
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
 
   useEffect(() => {
     if (isOpen) {
@@ -10,6 +13,14 @@ function AddBookModal({ isOpen, onClose }) {
       modalRef.current?.close();
     }
   }, [isOpen]);
+
+  // Stars stuff
+  const calculateStarValue = (e, baseValue) => {
+    const rect = e.target.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const isHalf = mouseX < rect.width / 2;
+    return isHalf ? baseValue - 0.5 : baseValue;
+  };
 
   return (
     <dialog
@@ -108,16 +119,30 @@ function AddBookModal({ isOpen, onClose }) {
           />
         </div>
         <div className="form-group">
-          <label>Rating (1-5)</label>
-          <input
-            type="number"
-            name="score"
-            id="score-input"
-            min="1"
-            max="5"
-            defaultValue="0"
-            required
-          />
+          <label>Rating</label>
+          <div className="rating-input" onMouseLeave={() => setHover(0)}>
+            {[1, 2, 3, 4, 5].map((star) => {
+              const displayValue = hover || rating;
+
+              let starClass = "fa-regular fa-star";
+              if (displayValue >= star) {
+                starClass = "fa-solid fa-star";
+              } else if (displayValue >= star - 0.5) {
+                starClass = "fa-solid fa-star-half-stroke";
+              }
+
+              return (
+                <i
+                  key={star}
+                  className={starClass}
+                  onMouseMove={(e) => setHover(calculateStarValue(e, star))}
+                  onClick={(e) => setRating(calculateStarValue(e, star))}
+                  style={{ cursor: "pointer" }}
+                ></i>
+              );
+            })}
+          </div>
+          <input type="hidden" name="score" value={rating} required min="0.5" />
         </div>
         <div className="form-group">
           <label htmlFor="comment">Comment</label>
